@@ -1,0 +1,40 @@
+<script setup>
+import { useHousesStore } from '@/stores/Houses';
+import { storeToRefs } from 'pinia';
+
+import Modal from '@/components/Modal.vue';
+import Error from '@/components/utils/Error.vue';
+import HousesList from '@/components/HousesList.vue';
+
+const store = useHousesStore();
+const emit = defineEmits(['close']);
+const { error } = storeToRefs(store);
+
+const close = () => {
+    emit('close');
+};
+</script>
+
+<template>
+    <Modal title="Wybierz dom">
+        <template #modalContentSlot>
+            <v-row>
+                <v-col>
+                    <HousesList :crud="false" @chosen="close()" />
+                </v-col>
+            </v-row>
+        </template>
+
+        <template #modalContentActions>
+            <v-row class="justify-end mb-3">
+                <v-col cols="6">
+                    <Error :error="error" v-if="error" class="text-left" />
+                </v-col>
+
+                <v-col cols="auto" class="py-0">
+                    <v-btn @click="close()" color="primary" class="w-100">Anuluj</v-btn>
+                </v-col>
+            </v-row>
+        </template>
+    </Modal>
+</template>
