@@ -10,6 +10,11 @@ const store = useHousesStore();
 const emit = defineEmits(['close']);
 const { error } = storeToRefs(store);
 
+const chooseAndClose = (v) => {
+    localStorage.setItem('chosenHouseId', v);
+    close();
+};
+
 const close = () => {
     emit('close');
 };
@@ -20,7 +25,7 @@ const close = () => {
         <template #modalContentSlot>
             <v-row>
                 <v-col>
-                    <HousesList :crud="false" @chosen="close()" />
+                    <HousesList :crud="false" @chosen="chooseAndClose" />
                 </v-col>
             </v-row>
         </template>

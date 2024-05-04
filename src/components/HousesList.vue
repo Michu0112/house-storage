@@ -41,7 +41,7 @@ const closeModal = (modal) => {
 
 const pickHouse = (id) => {
     if (!props.crud) {
-        emit('chosen');
+        emit('chosen', id);
     }
     store.chooseHouse(id, props.crud);
 };
