@@ -39,14 +39,14 @@ const close = () => {
 
         <template #modalContentActions>
             <v-row class="justify-end mb-3">
-                <v-col cols="6">
+                <v-col cols="12">
                     <Error :error="error" v-if="error" class="text-left" />
                 </v-col>
 
-                <v-col cols="auto" class="py-0">
+                <v-col cols="6" class="py-0">
                     <v-btn @click="close()" color="danger" class="w-100">Anuluj</v-btn>
                 </v-col>
-                <v-col cols="auto" class="py-0">
+                <v-col cols="6" class="py-0">
                     <v-btn form="createHouse" type="submit" color="primary" class="w-100">
                         <Loader :show-content="!submitting" type="circle" color="white">
                             Dodaj
