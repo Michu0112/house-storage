@@ -11,7 +11,39 @@ export default defineConfig({
         vuetify(),
         VitePWA({
             includeAssets: ['favicon.ico', 'img/icons/apple-touch-icon.png', 'mask-icon.svg'],
-            registerType: 'autoUpdate'
+            registerType: 'autoUpdate',
+            manifest: {
+                name: 'House Storage',
+                short_name: 'HS',
+                description: 'My awesome app to keep track of house storage',
+                theme_color: '#00BD7E',
+                icons: [
+                    {
+                        src: '/pwa-192x192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                        purpose: 'any'
+                    },
+                    {
+                        src: '/pwa-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any'
+                    },
+                    {
+                        src: '/pwa-maskable-192x192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                        purpose: 'maskable'
+                    },
+                    {
+                        src: '/pwa-maskable-512x512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'maskable'
+                    }
+                ]
+            }
         })
     ],
     resolve: {
