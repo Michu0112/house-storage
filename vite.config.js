@@ -6,7 +6,14 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [vue(), vuetify(), VitePWA({ registerType: 'autoUpdate' })],
+    plugins: [
+        vue(),
+        vuetify(),
+        VitePWA({
+            includeAssets: ['favicon.ico', 'img/icons/apple-touch-icon.png', 'mask-icon.svg'],
+            registerType: 'autoUpdate'
+        })
+    ],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))
