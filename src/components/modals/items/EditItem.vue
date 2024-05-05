@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useItemsStore } from '@/stores/Items';
+import { useRoomsStore } from '@/stores/Rooms';
 import { useUnitsStore } from '@/stores/Units';
 import { storeToRefs } from 'pinia';
 
@@ -8,16 +9,27 @@ import Modal from '@/components/Modal.vue';
 import Loader from '@/components/utils/Loader.vue';
 import Error from '@/components/utils/Error.vue';
 
+const props = defineProps({
+    fields: {
+        type: Array,
+        default: () => []
+    }
+});
+
 const store = useItemsStore();
 const unitsStore = useUnitsStore();
-const emit = defineEmits(['close']);
+const roomsStore = useRoomsStore();
+
+const emit = defineEmits(['close', 'updated']);
 const { chosenItem, submitting, error } = storeToRefs(store);
 const { units } = storeToRefs(unitsStore);
+const { chosenRoom } = storeToRefs(roomsStore);
 const step = ref(1);
 
 const submit = async () => {
     try {
-        await store.updateItem();
+        await store.updateItem(chosenRoom.value?.id);
+        emit('updated');
         close();
     } catch (err) {
         console.log(err);
@@ -48,6 +60,16 @@ const formattedUnits = computed(() => {
 
     return formatted;
 });
+
+const allowedFields = computed(() => {
+    return {
+        name: props.fields.includes('name'),
+        stock: props.fields.includes('stock'),
+        maximumStock: props.fields.includes('maximumStock'),
+        unit: props.fields.includes('unit'),
+        description: props.fields.includes('description')
+    };
+});
 </script>
 
 <template>
@@ -56,35 +78,42 @@ const formattedUnits = computed(() => {
             <v-row>
                 <v-col>
                     <v-form id="updateItem" @submit.prevent="submit">
-                        <span>Aktualizuj nazwę:</span>
-                        <v-text-field variant="outlined" v-model="chosenItem.name" />
+                        <div v-show="allowedFields.name">
+                            <span>Aktualizuj nazwę:</span>
+                            <v-text-field variant="outlined" v-model="chosenItem.name" />
+                        </div>
 
-                        <span>Aktualizuj ilość:</span>
-                        <v-text-field
-                            type="number"
-                            variant="outlined"
-                            v-model="chosenItem.stock"
-                            :step="step"
-                        />
-
-                        <span>Aktualizuj żądaną ilość:</span>
-                        <v-text-field
-                            type="number"
-                            variant="outlined"
-                            v-model="chosenItem.maximumStock"
-                            :step="step"
-                        />
-
-                        <span>Aktualizuj jednostkę:</span>
-                        <v-autocomplete
-                            @update:model-value="setStockStep"
-                            v-model="chosenItem.unit"
-                            :items="formattedUnits"
-                        >
-                        </v-autocomplete>
-
-                        <span>Aktualizuj opis:</span>
-                        <v-textarea v-model="chosenItem.description" />
+                        <div v-show="allowedFields.stock">
+                            <span>Aktualizuj ilość:</span>
+                            <v-text-field
+                                type="number"
+                                variant="outlined"
+                                v-model="chosenItem.stock"
+                                :step="step"
+                            />
+                        </div>
+                        <div v-show="allowedFields.maximumStock">
+                            <span>Aktualizuj żądaną ilość:</span>
+                            <v-text-field
+                                type="number"
+                                variant="outlined"
+                                v-model="chosenItem.maximumStock"
+                                :step="step"
+                            />
+                        </div>
+                        <div v-show="allowedFields.unit">
+                            <span>Aktualizuj jednostkę:</span>
+                            <v-autocomplete
+                                @update:model-value="setStockStep"
+                                v-model="chosenItem.unit"
+                                :items="formattedUnits"
+                            >
+                            </v-autocomplete>
+                        </div>
+                        <div v-show="allowedFields.description">
+                            <span>Aktualizuj opis:</span>
+                            <v-textarea v-model="chosenItem.description" />
+                        </div>
                     </v-form>
                 </v-col>
             </v-row>

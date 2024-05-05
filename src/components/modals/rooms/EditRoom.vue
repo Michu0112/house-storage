@@ -1,5 +1,6 @@
 <script setup>
 import { useRoomsStore } from '@/stores/Rooms';
+import { useHousesStore } from '@/stores/Houses';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
@@ -8,12 +9,15 @@ import Loader from '@/components/utils/Loader.vue';
 import Error from '@/components/utils/Error.vue';
 
 const store = useRoomsStore();
+const housesStore = useHousesStore();
+
 const emit = defineEmits(['close']);
 const { chosenRoom, submitting, error } = storeToRefs(store);
+const { chosenHouse } = storeToRefs(housesStore);
 
 const submit = async () => {
     try {
-        await store.updateRoom();
+        await store.updateRoom(chosenHouse.value.id);
         close();
     } catch (err) {
         console.log(err);

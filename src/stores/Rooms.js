@@ -1,17 +1,14 @@
+import { useHousesStore } from '@/stores/Houses';
 import { defineStore, storeToRefs } from 'pinia';
 import Parse from 'parse/dist/parse.min.js';
 import { useRoute } from 'vue-router';
 import router from '@/router';
-import { useHousesStore } from '@/stores/Houses';
 
 Parse.initialize(
     '3q3BRfqp3r9kySxm2DXdORLl8QKVMNmKtSR3xXjH',
     'z8EGOZDDM2XUEzKOCxxBXkidw3WB8lDmczydYuMB'
 );
 Parse.serverURL = 'https://parseapi.back4app.com/parse';
-
-const housesStore = useHousesStore();
-const { chosenHouse } = storeToRefs(housesStore);
 
 export const useRoomsStore = defineStore('rooms', {
     state: () => ({
@@ -60,7 +57,7 @@ export const useRoomsStore = defineStore('rooms', {
                 throw error;
             }
         },
-        async createRoom() {
+        async createRoom(houseObjectId) {
             const Room = Parse.Object.extend('rooms');
             const room = new Room();
 
@@ -68,7 +65,7 @@ export const useRoomsStore = defineStore('rooms', {
 
             const House = Parse.Object.extend('house');
             const housePointer = new House();
-            housePointer.id = chosenHouse.value.id;
+            housePointer.id = houseObjectId;
             room.set('house', housePointer);
 
             try {
@@ -76,14 +73,14 @@ export const useRoomsStore = defineStore('rooms', {
                 this.submitting = true;
                 await room.save();
                 this.submitting = false;
-                this.fetch(chosenHouse.value.id);
+                this.fetch(houseObjectId);
             } catch (err) {
                 this.submitting = false;
                 this.error = err.message;
                 throw err;
             }
         },
-        async updateRoom() {
+        async updateRoom(houseObjectId) {
             const Room = Parse.Object.extend('rooms');
             const room = new Room();
 
@@ -96,14 +93,14 @@ export const useRoomsStore = defineStore('rooms', {
                 await room.save();
                 this.submitting = false;
                 this.resetChosenRoom();
-                this.fetch(chosenHouse.value.id);
+                this.fetch(houseObjectId);
             } catch (err) {
                 this.submitting = false;
                 this.error = err.message;
                 throw err;
             }
         },
-        async deleteRoom() {
+        async deleteRoom(houseObjectId) {
             const Room = Parse.Object.extend('rooms');
             const room = new Room();
             room.id = this.chosenRoom.id;
@@ -113,7 +110,7 @@ export const useRoomsStore = defineStore('rooms', {
                 this.submitting = true;
                 await room.destroy();
                 this.submitting = false;
-                await this.fetch(chosenHouse.value.id);
+                await this.fetch(houseObjectId);
             } catch (err) {
                 this.submitting = false;
                 this.error = err.message;

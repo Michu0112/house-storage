@@ -84,7 +84,11 @@ unitsStore.fetch();
         </Loader>
     </v-container>
 
-    <EditItem v-model="editModal" @close="closeModal('edit')" />
+    <EditItem
+        v-model="editModal"
+        @close="closeModal('edit')"
+        :fields="['name', 'stock', 'maximumStock', 'unit', 'description']"
+    />
     <DeleteItem v-model="deleteModal" @close="closeModal('delete')" />
 </template>
 

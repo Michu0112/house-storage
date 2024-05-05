@@ -1,15 +1,11 @@
-import { defineStore, storeToRefs } from 'pinia';
+import { defineStore } from 'pinia';
 import Parse from 'parse/dist/parse.min.js';
-import { useRoomsStore } from '@/stores/Rooms';
 
 Parse.initialize(
     '3q3BRfqp3r9kySxm2DXdORLl8QKVMNmKtSR3xXjH',
     'z8EGOZDDM2XUEzKOCxxBXkidw3WB8lDmczydYuMB'
 );
 Parse.serverURL = 'https://parseapi.back4app.com/parse';
-
-const roomsStore = useRoomsStore();
-const { chosenRoom } = storeToRefs(roomsStore);
 
 export const useItemsStore = defineStore('items', {
     state: () => ({
@@ -39,7 +35,7 @@ export const useItemsStore = defineStore('items', {
                 throw error;
             }
         },
-        async updateItem() {
+        async updateItem(chosenRoomId) {
             const item = new Parse.Object('items');
             const stock = Number(this.chosenItem.stock);
             const maximumStock = Number(this.chosenItem.maximumStock);
@@ -62,7 +58,9 @@ export const useItemsStore = defineStore('items', {
                 this.submitting = true;
                 await item.save();
                 this.submitting = false;
-                this.fetch(chosenRoom.value.id);
+                if (chosenRoomId) {
+                    this.fetch(chosenRoomId);
+                }
                 this.resetChosenItem();
             } catch (err) {
                 this.submitting = false;
@@ -70,7 +68,7 @@ export const useItemsStore = defineStore('items', {
                 throw err;
             }
         },
-        async createItem() {
+        async createItem(chosenRoomId) {
             const item = new Parse.Object('items');
             const stock = Number(this.item.stock);
             const maximumStock = Number(this.item.maximumStock);
@@ -90,7 +88,7 @@ export const useItemsStore = defineStore('items', {
             const Room = Parse.Object.extend('rooms');
             const roomPointer = new Room();
 
-            roomPointer.id = chosenRoom.value.id;
+            roomPointer.id = chosenRoomId;
             item.set('room', roomPointer);
 
             try {
@@ -98,7 +96,7 @@ export const useItemsStore = defineStore('items', {
                 this.submitting = true;
                 await item.save();
                 this.submitting = false;
-                this.fetch(chosenRoom.value.id);
+                this.fetch(chosenRoomId);
                 this.resetItemForm();
             } catch (err) {
                 this.submitting = false;
@@ -106,7 +104,7 @@ export const useItemsStore = defineStore('items', {
                 throw err;
             }
         },
-        async deleteItem() {
+        async deleteItem(chosenRoomId) {
             const Item = Parse.Object.extend('items');
             const item = new Item();
             item.id = this.chosenItem.id;
@@ -116,7 +114,7 @@ export const useItemsStore = defineStore('items', {
                 this.submitting = true;
                 await item.destroy();
                 this.submitting = false;
-                await this.fetch(chosenRoom.value.id);
+                await this.fetch(chosenRoomId);
             } catch (err) {
                 this.submitting = false;
                 this.error = err.message;

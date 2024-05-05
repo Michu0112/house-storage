@@ -1,5 +1,6 @@
 <script setup>
 import { useRoomsStore } from '@/stores/Rooms';
+import { useHousesStore } from '@/stores/Houses';
 import { storeToRefs } from 'pinia';
 
 import Modal from '@/components/Modal.vue';
@@ -7,12 +8,15 @@ import Loader from '@/components/utils/Loader.vue';
 import Error from '@/components/utils/Error.vue';
 
 const store = useRoomsStore();
+const housesStore = useHousesStore();
+
 const emit = defineEmits(['close']);
 const { room, submitting, error } = storeToRefs(store);
+const { chosenHouse } = storeToRefs(housesStore);
 
 const submit = async () => {
     try {
-        await store.createRoom();
+        await store.createRoom(chosenHouse.value.id);
         close();
     } catch (err) {
         console.log(err);

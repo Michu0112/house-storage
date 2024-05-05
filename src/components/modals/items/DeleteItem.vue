@@ -1,5 +1,6 @@
 <script setup>
 import { useItemsStore } from '@/stores/Items';
+import { useRoomsStore } from '@/stores/Rooms';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
@@ -8,12 +9,15 @@ import Loader from '@/components/utils/Loader.vue';
 import Error from '@/components/utils/Error.vue';
 
 const store = useItemsStore();
+const roomsStore = useRoomsStore();
+
 const emit = defineEmits(['close']);
 const { chosenItem, submitting, error } = storeToRefs(store);
+const { chosenRoom } = storeToRefs(roomsStore);
 
 const submit = async () => {
     try {
-        await store.deleteItem();
+        await store.deleteItem(chosenRoom.value.id);
         close();
     } catch (err) {
         console.log(err);

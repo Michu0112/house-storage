@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useItemsStore } from '@/stores/Items';
+import { useRoomsStore } from '@/stores/Rooms';
 import { useUnitsStore } from '@/stores/Units';
 import { storeToRefs } from 'pinia';
 
@@ -10,14 +11,17 @@ import Error from '@/components/utils/Error.vue';
 
 const store = useItemsStore();
 const unitsStore = useUnitsStore();
+const roomsStore = useRoomsStore();
+
 const emit = defineEmits(['close']);
 const { item, submitting, error } = storeToRefs(store);
 const { units } = storeToRefs(unitsStore);
+const { chosenRoom } = storeToRefs(roomsStore);
 const step = ref(1);
 
 const submit = async () => {
     try {
-        await store.createItem();
+        await store.createItem(chosenRoom.value.id);
         close();
     } catch (err) {
         console.log(err);
