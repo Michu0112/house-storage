@@ -10,7 +10,8 @@ Parse.serverURL = 'https://parseapi.back4app.com/parse';
 export const useStatisticsStore = defineStore('statistics', {
     state: () => ({
         statistics: [],
-        fetching: false
+        fetching: false,
+        search: ''
     }),
     getters: {},
     actions: {
@@ -27,6 +28,10 @@ export const useStatisticsStore = defineStore('statistics', {
 
             const itemQuery = new Parse.Query(Item);
             itemQuery.matchesQuery('room', roomQuery);
+
+            if (this.search) {
+                itemQuery.matches('name', this.search, 'i');
+            }
 
             try {
                 this.fetching = true;

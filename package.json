@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "lodash.debounce": "^4.0.8",
     "parse": "^4.2.0",
     "pinia": "^2.1.7",
     "sass": "^1.75.0",

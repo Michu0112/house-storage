@@ -4,13 +4,14 @@ import { useStatisticsStore } from '@/stores/Statistics';
 import { storeToRefs } from 'pinia';
 import { Icon } from '@iconify/vue';
 import { watch } from 'vue';
+import debounce from 'lodash.debounce';
 
 import Loader from '@/components/utils/Loader.vue';
 import StatList from '@/components/StatList.vue';
 
 const store = useStatisticsStore();
 const housesStore = useHousesStore();
-const { statistics, fetching } = storeToRefs(store);
+const { statistics, fetching, search } = storeToRefs(store);
 const { chosenHouse } = storeToRefs(housesStore);
 const savedHouseId = localStorage.getItem('chosenHouseId');
 
@@ -22,6 +23,8 @@ const fetchFromLocal = async () => {
     }
 };
 
+const onSearch = debounce((chosenHouseId) => store.fetchStatistics(chosenHouseId), 500);
+
 watch(chosenHouse, (v) => {
     store.fetchStatistics(v.id);
 });
@@ -32,6 +35,16 @@ fetchFromLocal();
 <template>
     <template v-if="chosenHouse.id">
         <h2>Aktualny stan: {{ chosenHouse.attributes.name }}</h2>
+
+        <v-text-field
+            @input="onSearch(chosenHouse.id)"
+            label="Wyszukaj zasób"
+            type="text"
+            variant="outlined"
+            v-model="search"
+            class="mt-2"
+        />
+
         <main class="d-flex flex-column mt-10">
             <Loader :show-content="!fetching" type="circle">
                 <div
