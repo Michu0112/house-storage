@@ -29,6 +29,8 @@ export const useStatisticsStore = defineStore('statistics', {
             const itemQuery = new Parse.Query(Item);
             itemQuery.matchesQuery('room', roomQuery);
 
+            itemQuery.include('unit');
+
             if (this.search) {
                 itemQuery.matches('name', this.search, 'i');
             }

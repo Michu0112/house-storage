@@ -80,7 +80,10 @@ const days = (givenDate) => {
                     {{ item.attributes.stock }} / {{ item.attributes.maximumStock }}
                 </v-col>
             </v-row>
-            <span v-if="item.attributes.description" class="text-caption">
+            <span v-if="item.attributes.unit" class="d-block text-caption">
+                Jednostka: {{ item.attributes.unit.attributes.technical_label }}
+            </span>
+            <span v-if="item.attributes.description" class="d-block text-caption">
                 Opis: {{ item.attributes.description }}
             </span>
         </v-card-text>

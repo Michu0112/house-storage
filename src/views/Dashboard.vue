@@ -19,7 +19,6 @@ const fetchFromLocal = async () => {
     if (savedHouseId) {
         await housesStore.fetchAll();
         housesStore.chooseHouse(savedHouseId, false);
-        store.fetchStatistics(savedHouseId);
     }
 };
 
