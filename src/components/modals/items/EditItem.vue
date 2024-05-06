@@ -4,6 +4,7 @@ import { useItemsStore } from '@/stores/Items';
 import { useRoomsStore } from '@/stores/Rooms';
 import { useUnitsStore } from '@/stores/Units';
 import { storeToRefs } from 'pinia';
+import { Icon } from '@iconify/vue';
 
 import Modal from '@/components/Modal.vue';
 import Loader from '@/components/utils/Loader.vue';
@@ -84,32 +85,88 @@ const allowedFields = computed(() => {
                         </div>
 
                         <div v-show="allowedFields.stock">
-                            <span>Aktualizuj ilość:</span>
-                            <v-text-field
-                                type="number"
-                                variant="outlined"
-                                v-model="chosenItem.stock"
-                                :step="step"
-                            />
+                            <v-row>
+                                <v-col>
+                                    <span>Aktualizuj ilość:</span>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col align-self="center">
+                                    <v-btn @click="chosenItem.stock -= step">
+                                        <Icon
+                                            icon="ph:minus-fill"
+                                            color="primary"
+                                            :style="{ fontSize: '20px', color: '#00BD7E' }"
+                                        />
+                                    </v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-text-field
+                                        type="number"
+                                        variant="outlined"
+                                        v-model="chosenItem.stock"
+                                        :step="step"
+                                        hide-details
+                                    />
+                                </v-col>
+                                <v-col align-self="center">
+                                    <v-btn @click="chosenItem.stock += step">
+                                        <Icon
+                                            icon="ph:plus-fill"
+                                            color="primary"
+                                            :style="{ fontSize: '20px', color: '#00BD7E' }"
+                                        />
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
                         </div>
                         <div v-show="allowedFields.maximumStock">
-                            <span>Aktualizuj żądaną ilość:</span>
-                            <v-text-field
-                                type="number"
-                                variant="outlined"
-                                v-model="chosenItem.maximumStock"
-                                :step="step"
-                            />
+                            <v-row>
+                                <v-col>
+                                    <span>Aktualizuj żądaną ilość:</span>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col align-self="center">
+                                    <v-btn @click="chosenItem.maximumStock -= step">
+                                        <Icon
+                                            icon="ph:minus-fill"
+                                            color="primary"
+                                            :style="{ fontSize: '20px', color: '#00BD7E' }"
+                                        />
+                                    </v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-text-field
+                                        type="number"
+                                        variant="outlined"
+                                        v-model="chosenItem.maximumStock"
+                                        :step="step"
+                                        hide-details
+                                    />
+                                </v-col>
+                                <v-col align-self="center">
+                                    <v-btn @click="chosenItem.maximumStock += step">
+                                        <Icon
+                                            icon="ph:plus-fill"
+                                            color="primary"
+                                            :style="{ fontSize: '20px', color: '#00BD7E' }"
+                                        />
+                                    </v-btn>
+                                </v-col>
+                            </v-row>
                         </div>
-                        <div v-show="allowedFields.unit">
-                            <span>Aktualizuj jednostkę:</span>
-                            <v-autocomplete
-                                @update:model-value="setStockStep"
-                                v-model="chosenItem.unit"
-                                :items="formattedUnits"
-                            >
-                            </v-autocomplete>
-                        </div>
+                        <v-row v-show="allowedFields.unit">
+                            <v-col>
+                                <span>Aktualizuj jednostkę:</span>
+                                <v-autocomplete
+                                    @update:model-value="setStockStep"
+                                    v-model="chosenItem.unit"
+                                    :items="formattedUnits"
+                                >
+                                </v-autocomplete>
+                            </v-col>
+                        </v-row>
                         <div v-show="allowedFields.description">
                             <span>Aktualizuj opis:</span>
                             <v-textarea v-model="chosenItem.description" />
