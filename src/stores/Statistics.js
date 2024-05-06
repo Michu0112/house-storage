@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import Parse from 'parse/dist/parse.min.js';
+import { useHousesStore } from './Houses';
 
 Parse.initialize(
     '3q3BRfqp3r9kySxm2DXdORLl8QKVMNmKtSR3xXjH',
@@ -11,22 +12,35 @@ export const useStatisticsStore = defineStore('statistics', {
     state: () => ({
         statistics: [],
         fetching: false,
-        search: ''
+        search: '',
+        filters: {
+            roomId: ''
+        }
     }),
-    getters: {},
+    getters: {
+        chosenHouse() {
+            const user = useHousesStore();
+            return user.chosenHouse;
+        }
+    },
     actions: {
-        async fetchStatistics(houseId) {
+        async fetchStatistics() {
             const Item = Parse.Object.extend('items');
             const Room = Parse.Object.extend('rooms');
 
             const roomQuery = new Parse.Query(Room);
 
             const house = new Parse.Object('house');
-            house.id = houseId;
+            house.id = this.chosenHouse.id;
 
             roomQuery.equalTo('house', house);
 
             const itemQuery = new Parse.Query(Item);
+
+            if (this.filters.roomId) {
+                roomQuery.equalTo('objectId', this.filters.roomId);
+            }
+
             itemQuery.matchesQuery('room', roomQuery);
 
             itemQuery.include('unit');
@@ -55,6 +69,10 @@ export const useStatisticsStore = defineStore('statistics', {
                 console.error('Error fetching statistics:', error);
                 throw error;
             }
+        },
+        setRoomFilter(v) {
+            this.filters.roomId = v;
+            this.fetchStatistics();
         },
         resetError() {
             this.error = '';

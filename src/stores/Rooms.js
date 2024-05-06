@@ -1,5 +1,4 @@
-import { useHousesStore } from '@/stores/Houses';
-import { defineStore, storeToRefs } from 'pinia';
+import { defineStore } from 'pinia';
 import Parse from 'parse/dist/parse.min.js';
 import { useRoute } from 'vue-router';
 import router from '@/router';

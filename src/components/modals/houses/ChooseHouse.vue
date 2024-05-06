@@ -32,8 +32,8 @@ const close = () => {
 
         <template #modalContentActions>
             <v-row class="justify-end mb-3">
-                <v-col cols="12">
-                    <Error :error="error" v-if="error" class="text-left" />
+                <v-col cols="12" v-if="error">
+                    <Error :error="error" class="text-left" />
                 </v-col>
 
                 <v-col cols="12" class="py-0">

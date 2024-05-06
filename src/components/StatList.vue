@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia';
 import { useHousesStore } from '@/stores/Houses';
 import { useItemsStore } from '@/stores/Items';
 import { useStatisticsStore } from '@/stores/Statistics';
+import { Icon } from '@iconify/vue';
 
 import EditItem from '@/components/modals/items/EditItem.vue';
 
@@ -45,7 +46,12 @@ const days = (givenDate) => {
 
     const days = Math.floor(difference / (1000 * 60 * 60 * 24));
 
-    return days;
+    const languageMap = {
+        0: 'Dziś',
+        1: `1 dzień`
+    };
+
+    return languageMap[days] ? languageMap[days] : `${days} dni`;
 };
 </script>
 
@@ -68,12 +74,18 @@ const days = (givenDate) => {
                 borderColor: getColorFromStock(item.attributes.stock, item.attributes.maximumStock)
             }"
         >
-            {{ days(item.attributes.updatedAt) }} dni temu
+            <Icon
+                icon="material-symbols:update"
+                color="primary"
+                class="mr-1"
+                :style="{ fontSize: '20px', color: '#00BD7E' }"
+            />
+            {{ days(item.attributes.updatedAt) }}
         </v-chip>
         <v-card-text class="item-card-text pa-4">
             <v-row align="center" justify="space-between">
                 <v-col>
-                    <span class="text-subtitle-1">{{ item.attributes.name }}</span>
+                    <span class="text-subtitle-1 font-weight-bold">{{ item.attributes.name }}</span>
                 </v-col>
 
                 <v-col cols="auto" class="text-h4">
@@ -106,6 +118,7 @@ const days = (givenDate) => {
 
     &-text {
         background-color: #181818;
+        height: 100%;
     }
 
     &-date {

@@ -10,6 +10,10 @@ body {
     place-items: unset !important;
 }
 
+body * {
+    font-family: 'Lexend', sans-serif !important;
+}
+
 a,
 .green {
     text-decoration: none;

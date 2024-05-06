@@ -8,6 +8,7 @@ import debounce from 'lodash.debounce';
 
 import Loader from '@/components/utils/Loader.vue';
 import StatList from '@/components/StatList.vue';
+import VAutocompleteServer from '@/components/VAutocompleteServer.vue';
 
 const store = useStatisticsStore();
 const housesStore = useHousesStore();
@@ -22,10 +23,10 @@ const fetchFromLocal = async () => {
     }
 };
 
-const onSearch = debounce((chosenHouseId) => store.fetchStatistics(chosenHouseId), 500);
+const onSearch = debounce(store.fetchStatistics, 500);
 
-watch(chosenHouse, (v) => {
-    store.fetchStatistics(v.id);
+watch(chosenHouse, () => {
+    store.fetchStatistics();
 });
 
 fetchFromLocal();
@@ -35,20 +36,33 @@ fetchFromLocal();
     <template v-if="chosenHouse.id">
         <h2>Aktualny stan: {{ chosenHouse.attributes.name }}</h2>
 
-        <v-text-field
-            @input="onSearch(chosenHouse.id)"
-            label="Wyszukaj zasób"
-            type="text"
-            variant="outlined"
-            v-model="search"
-            class="mt-2"
-        />
+        <v-row class="mt-2">
+            <v-col>
+                <v-text-field
+                    @input="onSearch(chosenHouse.id)"
+                    label="Nazwa zasobu"
+                    type="text"
+                    variant="outlined"
+                    v-model="search"
+                    clearable
+                />
+            </v-col>
+
+            <v-col>
+                <VAutocompleteServer
+                    @update:model-value="store.setRoomFilter"
+                    fetch-fn-name="fetchRoomsOptions"
+                    data-source="rooms"
+                    label="Pokój"
+                />
+            </v-col>
+        </v-row>
 
         <main class="d-flex flex-column mt-10">
             <Loader :show-content="!fetching" type="circle">
                 <div
                     v-if="statistics && statistics.length"
-                    class="d-flex flex-column flex-md-row ga-5"
+                    class="d-flex flex-column flex-md-row flex-md-wrap ga-5 ga-md-10"
                 >
                     <StatList :statistics="statistics" />
                 </div>

@@ -56,7 +56,7 @@ store.fetchAll();
         </h1>
         <Loader :show-content="!fetching" type="circle">
             <v-row v-if="houses.length > 0">
-                <v-col cols="12" md="4" v-for="house in houses" :key="house.id">
+                <v-col cols="12" :md="crud ? 4 : 12" v-for="house in houses" :key="house.id">
                     <v-card
                         @click="pickHouse(house.id)"
                         class="house-card d-flex justify-space-between align-center pa-3"
