@@ -1,0 +1,9 @@
+{
+    "languages": {
+        "en-US": "English",
+        "pl-PL": "Polish"
+    },
+    "validations": {
+        "required": "This field is required."
+    }
+}

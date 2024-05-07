@@ -2,6 +2,8 @@
 import { useHousesStore } from '@/stores/Houses';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
+import { useVuelidate } from '@vuelidate/core';
+import { required } from '@/utils/i18n/i18n-validators';
 
 import Modal from '@/components/Modal.vue';
 import Loader from '@/components/utils/Loader.vue';
@@ -12,20 +14,39 @@ const emit = defineEmits(['close']);
 const { chosenHouse, submitting, error } = storeToRefs(store);
 
 const submit = async () => {
-    try {
-        await store.updateHouse();
-        close();
-    } catch (err) {
-        console.log(err);
+    v$.value.$validate();
+
+    if (!v$.value.$error) {
+        try {
+            await store.updateHouse();
+            close();
+        } catch (err) {
+            console.log(err);
+        }
+
+        return;
     }
+
+    console.group('House edit validation errors');
+    v$.value.$errors.forEach((error) => console.warn(error.$message));
+    console.groupEnd();
 };
 
 const close = () => {
+    v$.value.$reset();
     emit('close');
 };
 
+const rules = {
+    name: { required }
+};
+
+const v$ = useVuelidate(rules, chosenHouse);
+
 const title = computed(() => {
-    return 'Edytujesz dom: ' + chosenHouse.value?.name;
+    const houseName = chosenHouse.value?.name;
+
+    return 'Edytujesz dom: ' + (houseName ? houseName : '');
 });
 </script>
 
@@ -36,7 +57,13 @@ const title = computed(() => {
                 <v-col>
                     <v-form id="updateRoom" @submit.prevent="submit">
                         <span>Aktualizuj nazwę:</span>
-                        <v-text-field variant="outlined" v-model="chosenHouse.name" />
+                        <v-text-field v-model="chosenHouse.name" variant="outlined" hide-details />
+                        <Error
+                            v-for="(e, i) in v$.name?.$errors"
+                            :error="e.$message"
+                            :key="i"
+                            class="mt-1"
+                        />
                     </v-form>
                 </v-col>
             </v-row>
