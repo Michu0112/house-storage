@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce';
 
 import Loader from '@/components/utils/Loader.vue';
 import StatList from '@/components/StatList.vue';
-import VAutocompleteServer from '@/components/VAutocompleteServer.vue';
+import VAutocomplete from '@/components/VAutocomplete.vue';
 
 const store = useStatisticsStore();
 const housesStore = useHousesStore();
@@ -61,7 +61,7 @@ fetchFromLocal();
                 </v-col>
 
                 <v-col cols="12" md="6">
-                    <VAutocompleteServer
+                    <VAutocomplete
                         @update:model-value="store.setRoomFilter"
                         fetch-fn-name="fetchRoomsOptions"
                         data-source="rooms"
