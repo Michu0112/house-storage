@@ -3,7 +3,7 @@ import { useHousesStore } from '@/stores/Houses';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@/utils/i18n/i18n-validators';
+import { required, maxLength } from '@/utils/i18n/i18n-validators';
 
 import Modal from '@/components/Modal.vue';
 import Loader from '@/components/utils/Loader.vue';
@@ -38,14 +38,13 @@ const close = () => {
 };
 
 const rules = {
-    name: { required }
+    name: { required, maxLength: maxLength(20) }
 };
 
 const v$ = useVuelidate(rules, chosenHouse);
 
 const title = computed(() => {
     const houseName = chosenHouse.value?.name;
-
     return 'Edytujesz dom: ' + (houseName ? houseName : '');
 });
 </script>

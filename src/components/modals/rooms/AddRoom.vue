@@ -2,6 +2,8 @@
 import { useRoomsStore } from '@/stores/Rooms';
 import { useHousesStore } from '@/stores/Houses';
 import { storeToRefs } from 'pinia';
+import { required, maxLength } from '@/utils/i18n/i18n-validators';
+import { useVuelidate } from '@vuelidate/core';
 
 import Modal from '@/components/Modal.vue';
 import Loader from '@/components/utils/Loader.vue';
@@ -15,15 +17,31 @@ const { room, submitting, error } = storeToRefs(store);
 const { chosenHouse } = storeToRefs(housesStore);
 
 const submit = async () => {
-    try {
-        await store.createRoom(chosenHouse.value.id);
-        close();
-    } catch (err) {
-        console.log(err);
+    v$.value.$validate();
+
+    if (!v$.value.$error) {
+        try {
+            await store.createRoom(chosenHouse.value.id);
+            close();
+        } catch (err) {
+            console.log(err);
+        }
+        return;
     }
+
+    console.group('House edit validation errors');
+    v$.value.$errors.forEach((error) => console.warn(error.$message));
+    console.groupEnd();
 };
 
+const rules = {
+    name: { required, maxLength: maxLength(20) }
+};
+
+const v$ = useVuelidate(rules, room);
+
 const close = () => {
+    v$.value.$reset();
     emit('close');
 };
 </script>
@@ -34,8 +52,18 @@ const close = () => {
             <v-row>
                 <v-col>
                     <v-form id="createRoom" @submit.prevent="submit">
-                        <span>Nazwa pokoju:</span>
-                        <v-text-field variant="outlined" v-model="room.name" />
+                        <v-row>
+                            <v-col>
+                                <span>Nazwa pokoju:</span>
+                                <v-text-field variant="outlined" v-model="room.name" hide-details />
+                                <Error
+                                    v-for="(e, i) in v$.name?.$errors"
+                                    :error="e.$message"
+                                    :key="i"
+                                    class="mt-1"
+                                />
+                            </v-col>
+                        </v-row>
                     </v-form>
                 </v-col>
             </v-row>

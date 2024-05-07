@@ -4,6 +4,9 @@
         "pl-PL": "Polish"
     },
     "validations": {
-        "required": "This field is required."
+        "required": "This field is required.",
+        "maxLength": "This field should have a maximum of {max} characters.",
+        "minValue": "This field takes the minimal value {min}",
+        "maxValue": "This field takes the maximum value {max}"
     }
 }

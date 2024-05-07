@@ -1,6 +1,8 @@
 <script setup>
 import { useHousesStore } from '@/stores/Houses';
 import { storeToRefs } from 'pinia';
+import { useVuelidate } from '@vuelidate/core';
+import { required, maxLength } from '@/utils/i18n/i18n-validators';
 
 import Modal from '@/components/Modal.vue';
 import Loader from '@/components/utils/Loader.vue';
@@ -11,15 +13,31 @@ const emit = defineEmits(['close']);
 const { house, submitting, error } = storeToRefs(store);
 
 const submit = async () => {
-    try {
-        await store.createHouse();
-        close();
-    } catch (err) {
-        console.log(err);
+    v$.value.$validate();
+
+    if (!v$.value.$error) {
+        try {
+            await store.createHouse();
+            close();
+        } catch (err) {
+            console.log(err);
+        }
+        return;
     }
+
+    console.group('House edit validation errors');
+    v$.value.$errors.forEach((error) => console.warn(error.$message));
+    console.groupEnd();
 };
 
+const rules = {
+    name: { required, maxLength: maxLength(20) }
+};
+
+const v$ = useVuelidate(rules, house);
+
 const close = () => {
+    v$.value.$reset();
     emit('close');
 };
 </script>
@@ -31,7 +49,13 @@ const close = () => {
                 <v-col>
                     <v-form id="createHouse" @submit.prevent="submit">
                         <span>Nazwa domu:</span>
-                        <v-text-field variant="outlined" v-model="house.name" />
+                        <v-text-field variant="outlined" v-model="house.name" hide-details />
+                        <Error
+                            v-for="(e, i) in v$.name?.$errors"
+                            :error="e.$message"
+                            :key="i"
+                            class="mt-1"
+                        />
                     </v-form>
                 </v-col>
             </v-row>

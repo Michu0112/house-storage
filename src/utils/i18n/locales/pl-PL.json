@@ -4,6 +4,9 @@
         "pl-PL": "Polski"
     },
     "validations": {
-        "required": "To pole jest wymagane."
+        "required": "To pole jest wymagane.",
+        "maxLength": "To pole powinno mieć maksymalnie {max} znaków.",
+        "minValue": "To pole przyjmuje minmalną wartość {min}",
+        "maxValue": "To pole przyjmuje maksymalną wartość {max}"
     }
 }

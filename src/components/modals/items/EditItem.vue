@@ -5,6 +5,8 @@ import { useRoomsStore } from '@/stores/Rooms';
 import { useUnitsStore } from '@/stores/Units';
 import { storeToRefs } from 'pinia';
 import { Icon } from '@iconify/vue';
+import { required, maxLength, maxValue, minValue } from '@/utils/i18n/i18n-validators';
+import { useVuelidate } from '@vuelidate/core';
 
 import Modal from '@/components/Modal.vue';
 import Loader from '@/components/utils/Loader.vue';
@@ -28,16 +30,35 @@ const { chosenRoom } = storeToRefs(roomsStore);
 const step = ref(1);
 
 const submit = async () => {
-    try {
-        await store.updateItem(chosenRoom.value?.id);
-        emit('updated');
-        close();
-    } catch (err) {
-        console.log(err);
+    v$.value.$validate();
+
+    if (!v$.value.$error) {
+        try {
+            await store.updateItem(chosenRoom.value?.id);
+            emit('updated');
+            close();
+        } catch (err) {
+            console.log(err);
+        }
+        return;
     }
+
+    console.group('House edit validation errors');
+    v$.value.$errors.forEach((error) => console.warn(error.$message));
+    console.groupEnd();
 };
 
+const rules = {
+    name: { required, maxLength: maxLength(20) },
+    stock: { required, maxValue: maxValue(1000), minValue: minValue(0) },
+    maximumStock: { required, maxValue: maxValue(1000), minValue: minValue(0) },
+    unit: { required }
+};
+
+const v$ = useVuelidate(rules, chosenItem);
+
 const close = () => {
+    v$.value.$reset();
     emit('close');
 };
 
@@ -47,7 +68,8 @@ const setStockStep = (v) => {
 };
 
 const title = computed(() => {
-    return 'Edytuj stan: ' + chosenItem.value?.name;
+    const itemName = chosenItem.value?.name;
+    return 'Edytuj stan: ' + (itemName ? itemName : '');
 });
 
 const formattedUnits = computed(() => {
@@ -79,12 +101,24 @@ const allowedFields = computed(() => {
             <v-row>
                 <v-col>
                     <v-form id="updateItem" @submit.prevent="submit">
-                        <div v-show="allowedFields.name">
-                            <span>Aktualizuj nazwę:</span>
-                            <v-text-field variant="outlined" v-model="chosenItem.name" />
-                        </div>
+                        <v-row v-show="allowedFields.name">
+                            <v-col>
+                                <span>Aktualizuj nazwę:</span>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="chosenItem.name"
+                                    hide-details
+                                />
+                                <Error
+                                    v-for="(e, i) in v$.name?.$errors"
+                                    :error="e.$message"
+                                    :key="i"
+                                    class="mt-1"
+                                />
+                            </v-col>
+                        </v-row>
 
-                        <div v-show="allowedFields.stock">
+                        <div class="mt-3" v-show="allowedFields.stock">
                             <v-row>
                                 <v-col>
                                     <span>Aktualizuj ilość:</span>
@@ -120,8 +154,18 @@ const allowedFields = computed(() => {
                                     </v-btn>
                                 </v-col>
                             </v-row>
+                            <v-row>
+                                <v-col>
+                                    <Error
+                                        v-for="(e, i) in v$.stock?.$errors"
+                                        :error="e.$message"
+                                        :key="i"
+                                        class="mt-1"
+                                    />
+                                </v-col>
+                            </v-row>
                         </div>
-                        <div v-show="allowedFields.maximumStock">
+                        <div class="mt-3" v-show="allowedFields.maximumStock">
                             <v-row>
                                 <v-col>
                                     <span>Aktualizuj żądaną ilość:</span>
@@ -157,6 +201,16 @@ const allowedFields = computed(() => {
                                     </v-btn>
                                 </v-col>
                             </v-row>
+                            <v-row>
+                                <v-col>
+                                    <Error
+                                        v-for="(e, i) in v$.maximumStock?.$errors"
+                                        :error="e.$message"
+                                        :key="i"
+                                        class="mt-1"
+                                    />
+                                </v-col>
+                            </v-row>
                         </div>
                         <v-row v-show="allowedFields.unit">
                             <v-col>
@@ -165,14 +219,23 @@ const allowedFields = computed(() => {
                                     @update:model-value="setStockStep"
                                     v-model="chosenItem.unit"
                                     :items="formattedUnits"
-                                >
-                                </v-autocomplete>
+                                    hide-details
+                                />
+                                <Error
+                                    v-for="(e, i) in v$.unit?.$errors"
+                                    :error="e.$message"
+                                    :key="i"
+                                    class="mt-1"
+                                />
                             </v-col>
                         </v-row>
-                        <div v-show="allowedFields.description">
-                            <span>Aktualizuj opis:</span>
-                            <v-textarea v-model="chosenItem.description" />
-                        </div>
+
+                        <v-row v-show="allowedFields.description">
+                            <v-col>
+                                <span>Aktualizuj opis:</span>
+                                <v-textarea v-model="chosenItem.description" hide-details />
+                            </v-col>
+                        </v-row>
                     </v-form>
                 </v-col>
             </v-row>

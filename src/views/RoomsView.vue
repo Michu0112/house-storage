@@ -25,7 +25,7 @@ const closeModal = () => {
     store.resetRoomForm();
 };
 
-if (!chosenHouse.value) {
+if (!chosenHouse.value.id) {
     housesStore.fetchHouseFromURL();
 }
 </script>
