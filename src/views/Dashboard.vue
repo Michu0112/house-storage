@@ -39,13 +39,23 @@ fetchFromLocal();
         <v-row class="mt-2">
             <v-col>
                 <v-text-field
-                    @input="onSearch(chosenHouse.id)"
+                    @update:model-value="onSearch(chosenHouse.id)"
                     label="Nazwa zasobu"
                     type="text"
                     variant="outlined"
                     v-model="search"
                     clearable
-                />
+                >
+                    <template #clear="{ props }">
+                        <Icon
+                            v-bind="props"
+                            icon="ic:baseline-clear"
+                            color="primary"
+                            class="mr-1"
+                            :style="{ fontSize: '30px', color: '#00BD7E' }"
+                        />
+                    </template>
+                </v-text-field>
             </v-col>
 
             <v-col>
@@ -54,6 +64,7 @@ fetchFromLocal();
                     fetch-fn-name="fetchRoomsOptions"
                     data-source="rooms"
                     label="Pokój"
+                    clearable
                 />
             </v-col>
         </v-row>
