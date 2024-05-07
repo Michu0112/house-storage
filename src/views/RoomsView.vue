@@ -44,7 +44,7 @@ if (!chosenHouse.value) {
                             />
                         </GoBack>
 
-                        <span class="">{{ chosenHouse?.attributes.name }}</span>
+                        <span class="">{{ chosenHouse.attributes?.name }}</span>
                     </div>
                 </v-col>
                 <v-col cols="auto">

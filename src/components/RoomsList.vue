@@ -38,7 +38,7 @@ store.fetch(houseObjectId);
 
 <template>
     <v-container>
-        <h1 class="d-flex align-center ga-3">
+        <h1 class="d-flex align-center justify-center ga-3">
             <span>Pokoje w tym domu</span>
         </h1>
         <Loader :show-content="!fetching" type="circle">

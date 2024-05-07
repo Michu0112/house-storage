@@ -38,7 +38,7 @@ const closeModal = () => {
             </v-col>
         </v-row>
     </h1>
-    <main class="mt-10">
+    <main class="mt-5 mt-md-10">
         <HousesList />
         <AddHouse v-model="modal" @close="closeModal" />
     </main>

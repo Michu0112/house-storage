@@ -42,7 +42,7 @@ const isOverlayVariant = computed(() => {
     <template v-if="!showContent && isReplaceVariant">
         <v-row>
             <v-col class="d-flex justify-center align-center">
-                <component :is="component" :color="color" indeterminate />
+                <component :is="component" :color="color" bg-color="white" indeterminate />
             </v-col>
         </v-row>
     </template>
@@ -50,7 +50,7 @@ const isOverlayVariant = computed(() => {
         <div
             class="loader-overlay position-absolute w-100 h-100 d-flex justify-center align-center"
         >
-            <component :is="component" :color="color" indeterminate />
+            <component :is="component" :color="color" bg-color="white" indeterminate />
         </div>
         <slot />
     </template>

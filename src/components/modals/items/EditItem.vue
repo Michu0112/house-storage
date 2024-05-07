@@ -91,7 +91,7 @@ const allowedFields = computed(() => {
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-col align-self="center">
+                                <v-col align-self="center" class="d-flex justify-center">
                                     <v-btn @click="chosenItem.stock -= step">
                                         <Icon
                                             icon="ph:minus-fill"
@@ -102,14 +102,15 @@ const allowedFields = computed(() => {
                                 </v-col>
                                 <v-col>
                                     <v-text-field
-                                        type="number"
-                                        variant="outlined"
                                         v-model="chosenItem.stock"
                                         :step="step"
+                                        type="number"
+                                        class="number-input"
+                                        variant="outlined"
                                         hide-details
                                     />
                                 </v-col>
-                                <v-col align-self="center">
+                                <v-col align-self="center" class="d-flex justify-center">
                                     <v-btn @click="chosenItem.stock += step">
                                         <Icon
                                             icon="ph:plus-fill"
@@ -127,7 +128,7 @@ const allowedFields = computed(() => {
                                 </v-col>
                             </v-row>
                             <v-row>
-                                <v-col align-self="center">
+                                <v-col align-self="center" class="d-flex justify-center">
                                     <v-btn @click="chosenItem.maximumStock -= step">
                                         <Icon
                                             icon="ph:minus-fill"
@@ -138,14 +139,15 @@ const allowedFields = computed(() => {
                                 </v-col>
                                 <v-col>
                                     <v-text-field
-                                        type="number"
-                                        variant="outlined"
                                         v-model="chosenItem.maximumStock"
                                         :step="step"
+                                        type="number"
+                                        class="number-input"
+                                        variant="outlined"
                                         hide-details
                                     />
                                 </v-col>
-                                <v-col align-self="center">
+                                <v-col align-self="center" class="d-flex justify-center">
                                     <v-btn @click="chosenItem.maximumStock += step">
                                         <Icon
                                             icon="ph:plus-fill"

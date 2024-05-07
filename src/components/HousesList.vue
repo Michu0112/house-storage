@@ -51,7 +51,7 @@ store.fetchAll();
 
 <template>
     <v-container>
-        <h1 v-if="crud" class="d-flex align-center ga-3 mb-3">
+        <h1 v-if="crud" class="d-flex justify-center align-center ga-3 mb-3">
             <span>Domy</span>
         </h1>
         <Loader :show-content="!fetching" type="circle">

@@ -34,43 +34,47 @@ fetchFromLocal();
 
 <template>
     <template v-if="chosenHouse.id">
-        <h2>Aktualny stan: {{ chosenHouse.attributes.name }}</h2>
+        <v-container>
+            <h2>Sprawdzasz stan: {{ chosenHouse.attributes.name }}</h2>
 
-        <v-row class="mt-2">
-            <v-col>
-                <v-text-field
-                    @update:model-value="onSearch(chosenHouse.id)"
-                    label="Nazwa zasobu"
-                    type="text"
-                    variant="outlined"
-                    v-model="search"
-                    clearable
-                >
-                    <template #clear="{ props }">
-                        <Icon
-                            v-bind="props"
-                            icon="ic:baseline-clear"
-                            color="primary"
-                            class="mr-1"
-                            :style="{ fontSize: '30px', color: '#00BD7E' }"
-                        />
-                    </template>
-                </v-text-field>
-            </v-col>
+            <v-row class="mt-2">
+                <v-col cols="12" md="6">
+                    <v-text-field
+                        @update:model-value="onSearch(chosenHouse.id)"
+                        label="Nazwa zasobu"
+                        type="text"
+                        variant="outlined"
+                        v-model="search"
+                        hide-details
+                        clearable
+                    >
+                        <template #clear="{ props }">
+                            <Icon
+                                v-bind="props"
+                                icon="ic:baseline-clear"
+                                color="primary"
+                                class="mr-1"
+                                :style="{ fontSize: '30px', color: '#00BD7E' }"
+                            />
+                        </template>
+                    </v-text-field>
+                </v-col>
 
-            <v-col>
-                <VAutocompleteServer
-                    @update:model-value="store.setRoomFilter"
-                    fetch-fn-name="fetchRoomsOptions"
-                    data-source="rooms"
-                    label="Pokój"
-                    clearable
-                />
-            </v-col>
-        </v-row>
+                <v-col cols="12" md="6">
+                    <VAutocompleteServer
+                        @update:model-value="store.setRoomFilter"
+                        fetch-fn-name="fetchRoomsOptions"
+                        data-source="rooms"
+                        label="Pokój"
+                        clearable
+                        hide-details
+                    />
+                </v-col>
+            </v-row>
+        </v-container>
 
-        <main class="d-flex flex-column mt-10">
-            <Loader :show-content="!fetching" type="circle">
+        <main class="d-flex flex-column mt-5 mt-md-10">
+            <Loader :show-content="!fetching" type="linear">
                 <div
                     v-if="statistics && statistics.length"
                     class="d-flex flex-column flex-md-row flex-md-wrap ga-5 ga-md-10"

@@ -42,8 +42,8 @@ unitsStore.fetch();
 
 <template>
     <v-container>
-        <h1 class="d-flex align-center ga-3">
-            <span class="text-subtitle-1">Stan zasobów w tym pokoju</span>
+        <h1 class="d-flex justify-center align-center ga-3">
+            Stan zasobów
         </h1>
         <Loader :show-content="!fetching" type="circle">
             <v-container v-if="items.length > 0">
