@@ -248,10 +248,10 @@ const allowedFields = computed(() => {
                 </v-col>
 
                 <v-col cols="6" class="py-0">
-                    <v-btn @click="close()" color="danger" class="w-100">Anuluj</v-btn>
+                    <v-btn @click="close()" color="danger" class="w-100" :ripple="false">Anuluj</v-btn>
                 </v-col>
                 <v-col cols="6" class="py-0">
-                    <v-btn form="updateItem" type="submit" color="primary" class="w-100">
+                    <v-btn form="updateItem" type="submit" color="primary" :ripple="false" class="w-100">
                         <Loader :show-content="!submitting" type="circle" color="white">
                             Zapisz
                         </Loader>

@@ -37,7 +37,7 @@ const close = () => {
                 </v-col>
 
                 <v-col cols="12" class="py-0">
-                    <v-btn @click="close()" color="danger" class="w-100">Anuluj</v-btn>
+                    <v-btn @click="close()" color="danger" class="w-100" :ripple="false">Anuluj</v-btn>
                 </v-col>
             </v-row>
         </template>
